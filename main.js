@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, globalShortcut } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 
 // set environment
 process.env.NODE_ENV = "development";
@@ -11,13 +11,20 @@ let aboutWindow;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 500,
-    height: 600,
     title: "ImageShrink",
-    icon: `${__dirname}./assets/icons/Icon_256x256.png`,
+    width: isDev ? 800 : 500,
+    height: 600,
+    icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: isDev ? true : false,
     backgroundColor: "white",
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.loadFile("./app/index.html");
 }
@@ -87,3 +94,7 @@ const menu = [
       ]
     : []),
 ];
+
+ipcMain.on("image:minimize", (e, options) => {
+  console.log(options);
+});
