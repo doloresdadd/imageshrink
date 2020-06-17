@@ -77,6 +77,13 @@
           quality,
         });
       });
+
+      // On done
+      ipcRenderer.on("image:done", () => {
+        M.toast({
+          html: `Imaged resized to ${slider.value}% quality`,
+        });
+      });
     </script>
   </body>
 </html>
